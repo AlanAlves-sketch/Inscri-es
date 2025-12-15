@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inscrição para Evento</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+    }
+    .card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 420px;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      animation: fadeIn 0.6s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #203a43;
+    }
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 10px;
+      display: block;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+    input:focus {
+      outline: none;
+      border-color: #2c5364;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 18px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      background: #2c5364;
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    .success {
+      margin-top: 15px;
+      text-align: center;
+      color: #2e7d32;
+      font-weight: bold;
+    }
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h1>Inscrição no Evento</h1>
+
+  <label>Nome</label>
+  <input id="nome" placeholder="Digite seu nome completo">
+
+  <label>CPF</label>
+  <input id="cpf" placeholder="000.000.000-00">
+
+  <label>Endereço</label>
+  <input id="endereco" placeholder="Rua, número, bairro">
+
+  <button onclick="inscrever()">Inscrever</button>
+
+  <div id="msg" class="success"></div>
+
+  <div class="footer">Seus dados são usados apenas para inscrição no evento.</div>
+</div>
+
+<script>
+const ENDPOINT = 'https://script.google.com/macros/s/AKfycbzOX666wRMh6iDxgIAgoI5I8BUJv4NzsIXDf0QaPJh-3wF-JxFCEHronVU7C9mqGW8/exec';
+
+function validarCPF(cpf) {
+  return /^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(cpf);
+}
+
+async function inscrever() {
+  const nome = nomeEl.value.trim();
+  const cpf = cpfEl.value.trim();
+  const endereco = enderecoEl.value.trim();
+
+  if (!nome || !cpf || !endereco) {
+    alert('Preencha todos os campos');
+    return;
+  }
+
+  if (!validarCPF(cpf)) {
+    alert('CPF inválido. Use o formato 000.000.000-00');
+    return;
+  }
+
+  const dados = { nome, cpf, endereco };
+
+  try {
+    await fetch(ENDPOINT, {
+      method: 'POST',
+      body: JSON.stringify(dados)
+    });
+
+    msg.innerText = 'Inscrição realizada!';
+    nomeEl.value = cpfEl.value = enderecoEl.value = '';
+
+  } catch (e) {
+    alert('Erro ao enviar inscrição. Tente novamente.');
+  }
+}
+
+const nomeEl = document.getElementById('nome');
+const cpfEl = document.getElementById('cpf');
+const enderecoEl = document.getElementById('endereco');
+const msg = document.getElementById('msg');
+</script>
+
+</body>
+</html>
